@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CottonTex Premium Industries</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00c6ff;
+            --secondary: #0072ff;
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-light: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent-glow: rgba(0, 198, 255, 0.3);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Loading Spinner */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--accent-glow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* Main Content Sections */
+        main {
+            padding-top: 80px;
+        }
+
+        .page-section {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding: 4rem 10%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Styling */
+        #home {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9)), 
+                        url('images/hero.png') center/cover;
+            padding: 0 5%;
+        }
+
+        #home h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        #home p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 800px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Card System */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* About Section Improvements */
+        .about-feature {
+            display: flex;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .about-feature:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .about-img {
+            flex: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .about-img img {
+            width: 100%;
+            display: block;
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        /* Auth Modals */
+        .auth-container {
+            max-width: 450px;
+            margin: 4rem auto;
+            background: var(--bg-card);
+            border-radius: 25px;
+            padding: 3rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* Store & Cart */
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .cart-total {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            text-align: right;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1rem;
+        }
+
+        /* Admin Styles */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .admin-table th, .admin-table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-table th { color: var(--primary); }
+
+        /* Notification Toast */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            display: none;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            #home h1 { font-size: 2.5rem; }
+            .about-feature { flex-direction: column !important; }
+            nav ul { display: none; } /* Add burger menu for full production */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="toast"></div>
+
+    <header>
+        <div class="logo">CottonTex Premium</div>
+        <nav>
+            <ul id="main-nav">
+                <li><a onclick="showPage('home')" id="nav-home">Home</a></li>
+                <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+                <li><a onclick="showPage('products')" id="nav-products">Catalog</a></li>
+                <li id="nav-expenses-link" style="display:none;"><a onclick="showPage('expenses')" id="nav-expenses">Expenses</a></li>
+                <li id="nav-admin-link" style="display:none;"><a onclick="showPage('admin')" id="nav-admin">Admin</a></li>
+            </ul>
+        </nav>
+        <div class="nav-btns" id="auth-btns">
+            <!-- Dynamic Buttons -->
+        </div>
+    </header>
+
+    <main>
+        <!-- Home Page -->
+        <section id="home" class="page-section" style="display:flex;">
+            <h1>Excellence in Cotton<br><span style="color:var(--primary)">Textile Manufacturing</span></h1>
+            <p>From seed to spool, we deliver premium high-grade cotton yarn and textiles to global fashion houses and industrial manufacturers.</p>
+            <div class="nav-btns">
+                <button class="btn btn-primary" onclick="showPage('products')">Shop Our Catalog</button>
+                <button class="btn btn-outline" onclick="showPage('about')">Learn Our Process</button>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about" class="page-section">
+            <h2 style="font-size: 3rem; margin-bottom: 3rem; text-align: center;">Our Legacy of Quality</h2>
+            
+            <div class="about-feature">
+                <div class="about-img">
+                    <img src="images/hero.png" alt="Machinery">
+                </div>
+                <div class="about-content">
+                    <h3>State-of-the-Art Precision Spinning</h3>
+                    <p>We utilize the latest European spinning technology. Our Ruckmani Ammal Cotspin division features automated quality sensing, ensuring every inch of yarn meets international standards for tensile strength and uniformity.</p>
+                    <ul style="margin-top: 1rem; color: var(--text-dim); padding-left: 1.2rem;">
+                        <li>RIETER Autocoro 10 for high-speed precision</li>
+                        <li>Automated fiber contamination sorters</li>
+                        <li>Energy-efficient climate control systems</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="about-feature">
+                <div class="about-img">
+                    <img src="images/quality.png" alt="Quality">
+                </div>
+                <div class="about-content">
+                    <h3>Uncompromising Quality Control</h3>
+                    <p>Our cotton is sourced from the finest premium harvests. We test for micronaire, length, and strength in our climate-controlled labs. This dedication to fiber excellence makes us a preferred supplier for luxury textiles.</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong>Micronaire</strong><br><span style="color:var(--primary)">3.8 - 4.2 G/In</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong>Staple Length</strong><br><span style="color:var(--primary)">29mm - 32mm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products/Catalog Page -->
+        <section id="products" class="page-section">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Our Product Catalog</h2>
+                <button class="btn btn-outline" onclick="showPage('cart')">🛒 View Cart <span id="cart-count" class="badge">0</span></button>
+            </div>
+            <div class="card-grid" id="products-grid">
+                <!-- Products will be loaded from Firebase -->
+                <div class="card">
+                    <img src="images/yarn.png" alt="Product">
+                    <h3>Combed Cotton Yarn</h3>
+                    <p>Super soft, high-strength yarn ideal for premium knitwear.</p>
+                    <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                        <span style="font-size: 1.5rem; font-weight: 700;">$25.00/kg</span>
+                        <button class="btn btn-primary" onclick="addToCart('yarn1', 'Combed Cotton Yarn', 25)">Add to Cart</button>
+                    </div>
+                </div>
+                <!-- Mock products for immediate visual -->
+                <div class="card">
+                    <img src="images/hero.png" alt="Product">
+                    <h3>Carded Open End Yarn</h3>
+                    <p>Durable and reliable yarn for denim and heavy fabrics.</p>
+                    <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                        <span style="font-size: 1.5rem; font-weight: 700;">$18.00/kg</span>
+                        <button class="btn btn-primary" onclick="addToCart('yarn2', 'Carded Open End Yarn', 18)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Page -->
+        <section id="cart" class="page-section">
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-items" style="margin-top: 2rem;">
+                <!-- Cart items load here -->
+            </div>
+            <div id="cart-empty" style="text-align: center; display: none;">
+                <p>Your cart is empty.</p>
+                <button class="btn btn-primary" onclick="showPage('products')" style="vertical-align: middle;">Browse Products</button>
+            </div>
+            <div id="cart-summary" class="cart-total">
+                <p>Total: $<span id="cart-total-value">0</span></p>
+                <button class="btn btn-primary" style="margin-top: 1rem;" onclick="showPage('checkout')">Proceed to Checkout</button>
+            </div>
+        </section>
+
+        <!-- Checkout Page -->
+        <section id="checkout" class="page-section">
+            <div class="auth-container" style="max-width: 600px;">
+                <h2>Checkout</h2>
+                <div id="checkout-details" style="margin: 1.5rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                    <!-- Price details -->
+                </div>
+                <form onsubmit="handleOrderSubmit(event)">
+                    <div class="form-group">
+                        <label>Shipping Address</label>
+                        <input type="text" id="ship-address" required placeholder="Full shipping address">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select id="pay-method" onchange="toggleCodInfo()">
+                            <option value="card">Credit/Debit Card</option>
+                            <option value="upi">UPI / Digital Transfer</option>
+                            <option value="cod">Cash on Delivery (20% Advance Required)</option>
+                        </select>
+                    </div>
+                    <div id="cod-info" style="display:none; padding: 1rem; background: rgba(var(--primary), 0.1); border: 1px dashed var(--primary); border-radius:10px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        ⚠️ <strong>COD Policy:</strong> A 20% partial payment is required to confirm your order. You can pay the remaining 80% on delivery.
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Place Order</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login" class="page-section">
+            <div class="auth-container">
+                <h2>Login</h2>
+                <p style="color: var(--text-dim); margin-bottom: 2rem;">Access your dashboard and orders</p>
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="login-email" required placeholder="name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                </form>
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-dim);">
+                    Don't have an account? <a onclick="showPage('signup')" style="color: var(--primary); cursor: pointer;">Sign Up</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Signup Page -->
+        <section id="signup" class="page-section">
+            <div class="auth-container">
+                <h2>Create Account</h2>
+                <form onsubmit="handleSignupSubmit(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signup-name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signup-email" required placeholder="name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signup-password" required placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="signup-role">
+                            <option value="visitor">Visitor (Buyer)</option>
+                            <option value="admin">Administrator (Staff)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                </form>
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-dim);">
+                    Already have an account? <a onclick="showPage('login')" style="color: var(--primary); cursor: pointer;">Login</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Expense Tracker Page (Admin) -->
+        <section id="expenses" class="page-section">
+            <h2 style="margin-bottom: 2rem;">Business Expense Tracker</h2>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                <div class="card">
+                    <h3>Log New Expense</h3>
+                    <form onsubmit="handleExpenseSubmit(event)" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label>Expense Name / Category</label>
+                            <input type="text" id="exp-name" required placeholder="Electricity, Raw Materials, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount ($)</label>
+                            <input type="number" id="exp-amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description (Optional)</label>
+                            <input type="text" id="exp-desc">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Expense</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Recent Expenses</h3>
+                    <div id="expense-total" style="margin-bottom: 1rem; font-weight: 700; color: var(--primary);">Total Expense: $0</div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-body">
+                            <!-- Expenses load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="admin" class="page-section">
+            <h2 style="margin-bottom: 2rem;">Inventory & Logs</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                <div class="card">
+                    <h3>Add/Update Product</h3>
+                    <form onsubmit="handleInventoryUpdate(event)" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" id="inv-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Quantity (kg)</label>
+                            <input type="number" id="inv-qty" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Price per kg ($)</label>
+                            <input type="number" id="inv-price" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Update Inventory</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Production Logs</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-body">
+                            <!-- Logs load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzkzTZBqgy63QDOJ_a1zu85FKIVNZFdSU",
+            authDomain: "cotton-53160.firebaseapp.com",
+            projectId: "cotton-53160",
+            storageBucket: "cotton-53160.firebasestorage.app",
+            messagingSenderId: "1094206113334",
+            appId: "1:1094206113334:web:6341e8ced78da59b0bfa97",
+            measurementId: "G-55CWJ7T4QW"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // APP STATE
+        let currentUser = null;
+        let cart = [];
+
+        // ROUTING
+        function showPage(pageId) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(s => s.style.display = 'none');
+            
+            const target = document.getElementById(pageId);
+            if(target) {
+                target.style.display = (pageId === 'home') ? 'flex' : 'block';
+            }
+
+            // Update Nav Active State
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            const navLink = document.getElementById('nav-' + pageId);
+            if(navLink) navLink.classList.add('active');
+
+            window.scrollTo(0, 0);
+
+            // Special Loaders
+            if(pageId === 'products') loadProducts();
+            if(pageId === 'admin') loadLogs();
+            if(pageId === 'cart') renderCart();
+            if(pageId === 'checkout') renderCheckout();
+            if(pageId === 'expenses') loadExpenses();
+        }
+
+        // AUTHENTICATION
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+
+            updateAuthUI();
+            
+            if(user) {
+                // Fetch User Role from Firestore
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if(doc.exists) {
+                        const userData = doc.data();
+                        if(userData.role === 'admin') {
+                            document.getElementById('nav-admin-link').style.display = 'block';
+                            document.getElementById('nav-expenses-link').style.display = 'block';
+                        }
+                    }
+                });
+            } else {
+                document.getElementById('nav-admin-link').style.display = 'none';
+                document.getElementById('nav-expenses-link').style.display = 'none';
+            }
+        });
+
+        function updateAuthUI() {
+            const container = document.getElementById('auth-btns');
+            if(currentUser) {
+                container.innerHTML = `
+                    <span style="margin-right:1rem; font-size:0.9rem;">${currentUser.email}</span>
+                    <button class="btn btn-outline" onclick="logout()">Sign Out</button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="btn btn-outline" onclick="showPage('login')">Login</button>
+                    <button class="btn btn-primary" onclick="showPage('signup')">Register</button>
+                `;
+            }
+        }
+
+        async function handleSignupSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-password').value;
+            const role = document.getElementById('signup-role').value;
+
+            try {
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.collection('users').doc(cred.user.uid).set({
+                    name, email, role, createdAt: new Date()
+                });
+                showToast("Account created successfully!");
+                showPage('home');
+            } catch(err) {
+                alert(err.message);
+            }
+        }
+
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                showToast("Welcome back!");
+                showPage('home');
+            } catch(err) {
+                alert(err.message);
+            }
+        }
+
+        function logout() {
+            auth.signOut();
+            showPage('home');
+            showToast("Signed out.");
+        }
+
+        // STORE & CART LOGIC
+        function addToCart(id, name, price) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty++;
+            } else {
+                cart.push({id, name, price, qty: 1});
+            }
+            updateCartCount();
+            showToast(`${name} added to cart`);
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        function renderCart() {
+            const itemsDiv = document.getElementById('cart-items');
+            const summaryDiv = document.getElementById('cart-summary');
+            const emptyDiv = document.getElementById('cart-empty');
+            
+            if(cart.length === 0) {
+                itemsDiv.innerHTML = '';
+                summaryDiv.style.display = 'none';
+                emptyDiv.style.display = 'block';
+                return;
+            }
+
+            emptyDiv.style.display = 'none';
+            summaryDiv.style.display = 'block';
+            
+            let total = 0;
+            itemsDiv.innerHTML = cart.map((item, idx) => {
+                total += item.price * item.qty;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <h4>${item.name}</h4>
+                            <small>$${item.price}/kg x ${item.qty}</small>
+                        </div>
+                        <div style="font-weight:700;">$${(item.price * item.qty).toFixed(2)}</div>
+                        <button class="btn" style="color:red; padding:0" onclick="removeFromCart(${idx})">✕</button>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('cart-total-value').innerText = total.toFixed(2);
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            renderCart();
+            updateCartCount();
+        }
+
+        // CHECKOUT
+        function renderCheckout() {
+            if(cart.length === 0) {
+                showPage('products');
+                return;
+            }
+            let total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const details = document.getElementById('checkout-details');
+            details.innerHTML = `
+                <div style="display:flex; justify-content: space-between;"><span>Items Total:</span> <span>$${total.toFixed(2)}</span></div>
+                <div style="display:flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 0.5rem; padding-top: 0.5rem;">
+                    <strong>Net Payable:</strong> <strong>$${total.toFixed(2)}</strong>
+                </div>
+            `;
+        }
+
+        function toggleCodInfo() {
+            const method = document.getElementById('pay-method').value;
+            document.getElementById('cod-info').style.display = (method === 'cod') ? 'block' : 'none';
+        }
+
+        async function handleOrderSubmit(e) {
+            e.preventDefault();
+            if(!currentUser) {
+                showToast("Please login to place orders");
+                showPage('login');
+                return;
+            }
+
+            const method = document.getElementById('pay-method').value;
+            const address = document.getElementById('ship-address').value;
+            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+            const orderData = {
+                userId: currentUser.uid,
+                email: currentUser.email,
+                items: cart,
+                total: total,
+                paymentMethod: method,
+                address: address,
+                status: 'Pending',
+                createdAt: new Date()
+            };
+
+            try {
+                await db.collection('orders').add(orderData);
+                await db.collection('logs').add({
+                    activity: `New Order Placed ($${total})`,
+                    product: cart.map(i => i.name).join(', '),
+                    status: 'Success',
+                    date: new Date()
+                });
+                
+                cart = [];
+                updateCartCount();
+                showToast("Order placed successfully!");
+                showPage('home');
+            } catch(err) {
+                alert(err.message);
+            }
+        }
+
+        // ADMIN LOGIC
+        async function handleInventoryUpdate(e) {
+            e.preventDefault();
+            const name = document.getElementById('inv-name').value;
+            const qty = document.getElementById('inv-qty').value;
+            const price = document.getElementById('inv-price').value;
+
+            try {
+                await db.collection('products').add({
+                    name, stock: qty, price, updatedAt: new Date()
+                });
+                await db.collection('logs').add({
+                    activity: `Inventory Added (${qty}kg)`,
+                    product: name,
+                    status: 'Updated',
+                    date: new Date()
+                });
+                showToast("Inventory updated!");
+                e.target.reset();
+                loadLogs();
+            } catch(err) {
+                alert(err.message);
+            }
+        }
+
+        async function loadLogs() {
+            const snapshot = await db.collection('logs').orderBy('date', 'desc').limit(10).get();
+            const body = document.getElementById('logs-body');
+            body.innerHTML = snapshot.docs.map(doc => {
+                const data = doc.data();
+                return `
+                    <tr>
+                        <td>${data.date.toDate().toLocaleDateString()}</td>
+                        <td>${data.product}</td>
+                        <td>${data.activity}</td>
+                        <td><span style="color:var(--primary)">${data.status}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function loadProducts() {
+            const snapshot = await db.collection('products').get();
+            if(snapshot.empty) return; // Fallback to mock data already in HTML
+
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = snapshot.docs.map(doc => {
+                const data = doc.data();
+                return `
+                    <div class="card">
+                        <img src="images/yarn.png" alt="Product">
+                        <h3>${data.name}</h3>
+                        <p>Premium quality cotton product.</p>
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                            <span style="font-size: 1.5rem; font-weight: 700;">$${data.price}/kg</span>
+                            <button class="btn btn-primary" onclick="addToCart('${doc.id}', '${data.name}', ${data.price})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // EXPENSE TRACKER LOGIC
+        async function handleExpenseSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('exp-name').value;
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+            const desc = document.getElementById('exp-desc').value;
+
+            try {
+                await db.collection('expenses').add({
+                    name, amount, desc, date: new Date()
+                });
+                showToast("Expense recorded!");
+                e.target.reset();
+                loadExpenses();
+            } catch(err) { alert(err.message); }
+        }
+
+        async function loadExpenses() {
+            const snapshot = await db.collection('expenses').orderBy('date', 'desc').get();
+            const body = document.getElementById('expenses-body');
+            let total = 0;
+            body.innerHTML = snapshot.docs.map(doc => {
+                const data = doc.data();
+                total += data.amount;
+                return `
+                    <tr>
+                        <td>${data.date.toDate().toLocaleDateString()}</td>
+                        <td>${data.name}</td>
+                        <td>$${data.amount.toFixed(2)}</td>
+                    </tr>
+                `;
+            }).join('');
+            document.getElementById('expense-total').innerText = `Total Expense: $${total.toFixed(2)}`;
+        }
+
+        // UTILITIES
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        // Initial Show
+        showPage('home');
+
+    </script>
+</body>
+</html>
